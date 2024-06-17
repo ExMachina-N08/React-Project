@@ -6,7 +6,7 @@ function App() {
   const [pokemons, setPokemons] = useState(Pokedex);
   const handleSearch = (value) => {
     const pokemonFilter = Pokedex.filter((item) => {
-      return item.name.toLowerCase() === value.trim();
+      return item.name === value.trim();
     });
     setPokemons(pokemonFilter);
     value !== "" ? setPokemons(pokemonFilter) : setPokemons(Pokedex);
