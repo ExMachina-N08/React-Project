@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Modals } from "./Modals/Modals";
-const Card = ({ keys, images, names, types, pokemons, setPokemons, index }) => {
+const Card = ({ images, names, types, pokemons, setPokemons, index }) => {
   const [isOpen, setIsOpen] = useState(false);
   const handleOpen = () => {
     setIsOpen(true);
@@ -29,7 +29,7 @@ const Card = ({ keys, images, names, types, pokemons, setPokemons, index }) => {
           <Modals
             handleOpen={handleOpen}
             handleClose={handleClose}
-            keys={keys}
+            keys={index + 1}
             names={names}
             types={types}
             pokemons={pokemons}

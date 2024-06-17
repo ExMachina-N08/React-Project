@@ -3,21 +3,33 @@ import "./App.css";
 import Card from "./components/Card.jsx";
 import Pokedex from "./components/Pokemon.jsx";
 function App() {
-  const [pokemons, setPokemons] = useState(Pokedex); // initial values
+  const [pokemons, setPokemons] = useState(Pokedex);
+  const handleSearch = (value) => {
+    const pokemonFilter = Pokedex.filter((item) => {
+      return item.name.toLowerCase() === value.trim();
+    });
+    setPokemons(pokemonFilter);
+    value !== "" ? setPokemons(pokemonFilter) : setPokemons(Pokedex);
+    console.log("filter", pokemonFilter);
+  };
+  // initial values
 
   return (
     <>
       <div className="container d-flex flex-column">
         <div className="m-3 px-2">
-          <h1> Pokemon Search </h1>
-          <input type="text" />
-          <button>Search</button>
+          <input
+            type="text"
+            placeholder="Search Pokemon..."
+            onChange={(e) => handleSearch(e.target.value)}
+          />
+          <button onClick={handleSearch}>Search</button>
         </div>
         <div className=" d-flex flex-row  g-5">
           {pokemons.map((item, index) => {
             return (
               <Card
-                keys={index + 1}
+                key={item.id}
                 images={item.image}
                 names={item.name}
                 types={item.type.map((he) => {

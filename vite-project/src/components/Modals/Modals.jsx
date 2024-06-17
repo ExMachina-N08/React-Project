@@ -6,8 +6,8 @@ export const Modals = ({
   names,
   types,
   keys,
-  movies,
-  setMovies,
+  pokemons,
+  setPokemons,
   index,
 
   // open information editor
@@ -21,9 +21,9 @@ export const Modals = ({
   // event name change
   const [nameChange, handleNameChange] = useState(names);
   const newName = () => {
-    const updateName = [...movies];
+    const updateName = [...pokemons];
     updateName[index].name = nameChange;
-    setMovies(updateName);
+    setPokemons(updateName);
     handleClose();
   };
   //show button
