@@ -11,32 +11,34 @@ const Card = ({ images, names, types, pokemons, setPokemons, index }) => {
 
   return (
     <>
-      <div className="card w-25 col m-3 rounded-4">
-        <div onClick={handleOpen} className="border-0 accordion-flush">
-          <img
-            className="mx-auto img-fluid p-3 bg-light  "
-            style={{ borderTopRightRadius: 16, borderTopLeftRadius: 16 }}
-            src={images}
-            alt="..."
-          />
+      <div className="col-md-2 m-2 p-3">
+        <div className="card w-100 h-100 m-3 rounded-4 ">
+          <div onClick={handleOpen} className="border-0 accordion-flush">
+            <img
+              className="mx-auto p-3 card-img-top img-fluid bg-light  "
+              style={{ borderTopRightRadius: 16, borderTopLeftRadius: 16 }}
+              src={images}
+              alt="..."
+            />
 
-          <h5 className="card-title p-2 d-flex justify-content-center ">
-            <b>{names}</b>
-          </h5>
+            <h5 className="card-title p-2 d-flex justify-content-center ">
+              <b>{names}</b>
+            </h5>
+          </div>
+
+          {isOpen && (
+            <Modals
+              handleOpen={handleOpen}
+              handleClose={handleClose}
+              keys={index + 1}
+              names={names}
+              types={types}
+              pokemons={pokemons}
+              setPokemons={setPokemons}
+              index={index}
+            />
+          )}
         </div>
-
-        {isOpen && (
-          <Modals
-            handleOpen={handleOpen}
-            handleClose={handleClose}
-            keys={index + 1}
-            names={names}
-            types={types}
-            pokemons={pokemons}
-            setPokemons={setPokemons}
-            index={index}
-          />
-        )}
       </div>
     </>
   );
