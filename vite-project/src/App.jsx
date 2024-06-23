@@ -1,22 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import Card from "./components/Card.jsx";
+import axios from "axios";
+import axiosClient from "./axios/AxiosInstance.js";
+import InfiniteScroll from "react-infinite-scroller";
 import Pokedex from "./components/Pokemon.jsx";
 function App() {
-  const [pokemons, setPokemons] = useState(Pokedex);
+  const [pokemons, setPokemons] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [next, setNext] = useState(
+    "https://pokeapi.co/api/v2/pokemon/?offset=20&limit=20"
+  );
+
+  useEffect(() => {
+    axiosClient
+      .get("/pokemon/")
+      .then((respond) => {
+        fetchPokemonDetail(respond.data.results);
+        setNext(respond.data.next);
+      })
+      .catch((err) => console.log("error", err));
+
+    const fetchPokemonDetail = async (pokemonsArray) => {
+      const promise = pokemonsArray.map((pokemon) =>
+        axiosClient.get(pokemon.url.replace("https://pokeapi.co/api/v2", ""))
+      );
+      try {
+        const responses = await Promise.all(promise);
+        const detailData = responses.map((res) => res.data);
+        console.log("poke detail fetched", detailData);
+        setPokemons(detailData);
+        setLoading(false);
+      } catch (error) {
+        console.log("Error fetching details:", error);
+        setLoading(false);
+      }
+    };
+    console.log("pokeomon", pokemons);
+  }, []);
+
+  //api call
+
+  //search function
   const handleSearch = (value) => {
-    const pokemonFilter = Pokedex.filter((item) => {
-      return item.name === value.trim();
+    const pokemonFilter = pokemons.filter((item) => {
+      return item.name.toLowerCase() === value.trim();
     });
     setPokemons(pokemonFilter);
-    value !== "" ? setPokemons(pokemonFilter) : setPokemons(Pokedex);
+    value !== "" ? setPokemons(pokemonFilter) : setPokemons(pokemons);
     console.log("filter", pokemonFilter);
   };
-  // initial values
 
+  // initial values
   return (
     <>
-      <div className="container d-flex flex-column">
+      <div className="container d-flex flex-column justify-content-lg-center">
         <div className="m-3 px-2">
           <input
             type="text"
@@ -25,28 +63,34 @@ function App() {
           />
           <button onClick={handleSearch}>Search</button>
         </div>
-        <div className=" d-flex flex-row  g-5">
+        <div className=" row g-3">
           {pokemons.map((item, index) => {
             return (
               <Card
-                key={item.id}
-                images={item.image}
+                key={index}
+                images={item.sprites.front_default}
                 names={item.name}
-                types={item.type.map((he) => {
+                types={item.types.map((he) => {
                   const colors = {
-                    Electric: "yellow",
-                    Grass: "green",
-                    Fire: "orange",
-                    Water: "blue",
-                    Poison: "purple",
+                    electric: "yellow",
+                    grass: "green",
+                    fire: "orange",
+                    water: "blue",
+                    poison: "purple",
+                    normal: "salmon",
+                    flying: "lightsteelblue",
+                    bug: "sandybrown",
                   };
                   return (
                     <a
                       href="#"
-                      className="btn rounded-pill  flex-row"
-                      style={{ marginRight: 3, backgroundColor: colors[he] }}
+                      className="btn rounded-pill flex-row text-light"
+                      style={{
+                        marginRight: 3,
+                        backgroundColor: colors[he.type.name],
+                      }}
                     >
-                      {he}
+                      {he.type.name}
                     </a>
                   );
                 })}
